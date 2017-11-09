@@ -36,6 +36,8 @@ class DatePicker extends InputWidget
      */
     public $inline = false;
 
+    public $link = false;
+
     /**
      * @inheritdoc
      */
@@ -51,7 +53,7 @@ class DatePicker extends InputWidget
             Html::addCssClass($this->options, 'input-' . $this->size);
             Html::addCssClass($this->containerOptions, 'input-group-' . $this->size);
         }
-        Html::addCssClass($this->options, 'form-control');
+        if (!$this->link) Html::addCssClass($this->options, 'form-control');
         Html::addCssClass($this->containerOptions, 'input-group date');
     }
 
@@ -64,6 +66,8 @@ class DatePicker extends InputWidget
         $input = $this->hasModel()
             ? Html::activeTextInput($this->model, $this->attribute, $this->options)
             : Html::textInput($this->name, $this->value, $this->options);
+        
+        if ($this->link) $input = Html::a($this->value, '#', $this->options);
 
         if ($this->inline) {
             $input .= '<div></div>';
@@ -96,6 +100,7 @@ class DatePicker extends InputWidget
         } else {
             DatePickerAsset::register($view);
         }
+        
         // @codeCoverageIgnoreEnd
 
         $id = $this->options['id'];
@@ -118,6 +123,7 @@ class DatePicker extends InputWidget
                 $js[] = "$selector.on('$event', $handler);";
             }
         }
+        
         $view->registerJs(implode("\n", $js));
     }
 
